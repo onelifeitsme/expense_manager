@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
+    'django_celery_beat',
 
     'transaction.apps.TransactionConfig',
     'account.apps.AccountConfig',
@@ -140,6 +141,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'TIME_FORMAT': '%H:%M',
+    'TIME_INPUT_FORMATS': '%H:%M',
 }
 
 DJOSER = {

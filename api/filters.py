@@ -1,14 +1,15 @@
 from django_filters import FilterSet, AllValuesFilter
-from django_filters import DateTimeFilter, NumberFilter, RangeFilter, DateFromToRangeFilter, TimeRangeFilter
+from django_filters import DateTimeFilter, NumberFilter, RangeFilter, DateFromToRangeFilter, TimeRangeFilter, NumericRangeFilter, TimeFilter, DateFilter
 from transaction.models import Transaction
 
 
 class TransactionFilter(FilterSet):
-    amount = RangeFilter()
-    date = DateFromToRangeFilter()
-    time = TimeRangeFilter()
-
+    amount = NumberFilter(field_name='amount', label='Точная сумма')
+    amount_min = NumberFilter(field_name='amount', label='Сумма от', lookup_expr='gte')
+    amount_max = NumberFilter(field_name='amount', label='Сумма до', lookup_expr='lte')
+    date = DateFromToRangeFilter(field_name='date', label='Дата от-до')
+    time = TimeRangeFilter(field_name='time', label='Время от-до')
 
     class Meta:
         model = Transaction
-        fields = ['amount', 'date', 'time']
+        fields = ['amount', 'amount_min', 'amount_max', 'date', 'time']

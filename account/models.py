@@ -2,6 +2,9 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.db import models
 from transaction.models import TransactionCategory
+from django.db.models import Sum
+from django.utils import timezone
+import json
 
 
 class CustomUserManager(BaseUserManager):
@@ -38,6 +41,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def get_user_statistics(self, days=1):
+        """Статистика по категориям пользователя с выбираeмым количеством дней"""
+        data = []
+        date_range = [timezone.now() - timezone.timedelta(days=int(days or 1) - 1), timezone.now()]
+        user_categories = self.categories.all().prefetch_related('transactions')
+        for category in user_categories:
+            category_transactions = category.transactions.filter(date__range=date_range)
+            data.append(
+                {
+                    'category': category.name,
+                    'expense': category_transactions.aggregate(sum=Sum('amount')).get('sum'),
+                }
+            )
+
+        return data
 
     def save(self, *args, **kwargs):
         if not getattr(self, 'date_joined'):

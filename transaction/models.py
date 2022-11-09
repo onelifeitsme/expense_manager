@@ -1,12 +1,15 @@
 from django.db import models
+from django.db.models import Sum
+from django.utils import timezone
+import json
 
 
-# Create your models here.
 class Transaction(models.Model):
     user = models.ForeignKey('account.User', verbose_name='Пользователь', related_name='transactions', on_delete=models.CASCADE)
     amount = models.DecimalField(verbose_name='Сумма', max_digits=10, decimal_places=2, default=0.0)
-    time = models.DateTimeField(verbose_name='Время', auto_now_add=True)
-    category = models.ForeignKey('TransactionCategory', on_delete=models.CASCADE)
+    date = models.DateField(verbose_name='Дата', auto_now_add=True)
+    time = models.TimeField(verbose_name='Время', auto_now_add=True)
+    category = models.ForeignKey('TransactionCategory', related_name='transactions', on_delete=models.CASCADE)
     organization = models.CharField(verbose_name='Организация', max_length=255)
     description = models.CharField(verbose_name='Описание', max_length=255)
 
