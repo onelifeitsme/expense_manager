@@ -9,8 +9,12 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv('.env')
+from celery.schedules import crontab
 from django.contrib.auth import get_user_model
 
 
@@ -162,3 +166,24 @@ SIMPLE_JWT = {
 }
 
 AUTH_USER_MODEL = 'account.User'
+
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_TIMEOUT = 10
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_TIMEZONE = 'Europe/Minsk'
+
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+CELERY_BEAT_SCHEDULE = {
+    'send_emails': {
+        'task': 'api.tasks.send_statistics_to_users',
+        'schedule': crontab(minute=26),
+    },
+}
