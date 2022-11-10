@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=x-q%#w_=*+s73kia$!^@&_b+6r8y(h&-586!dg5c%ieo86i7j'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -177,6 +177,6 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 CELERY_BEAT_SCHEDULE = {
     'send_emails': {
         'task': 'send_emails.tasks.send_statistics_to_users',
-        'schedule': crontab(minute=8),
+        'schedule': crontab(hour=9),
     },
 }
