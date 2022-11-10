@@ -31,7 +31,7 @@ class TransactionCategory(models.Model):
     user = models.ForeignKey('account.User', verbose_name='Пользователь', related_name='categories', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return f'{self.user}:{self.name}'
 
     class Meta:
         verbose_name = 'Категория'

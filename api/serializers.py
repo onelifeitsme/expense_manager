@@ -1,6 +1,3 @@
-import json
-from decimal import Decimal
-
 from account.models import User
 from rest_framework import serializers
 from transaction.models import Transaction, TransactionCategory
@@ -29,4 +26,4 @@ class TransactionSerializer(serializers.ModelSerializer):
 
 class StatisticsCategorySerializer(serializers.Serializer):
     category = serializers.CharField()
-    expense = serializers.DecimalField(max_digits=10, decimal_places=2)
+    result = serializers.DecimalField(max_digits=10, decimal_places=2, allow_null=True)

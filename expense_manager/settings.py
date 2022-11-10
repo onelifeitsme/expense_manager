@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'transaction.apps.TransactionConfig',
     'account.apps.AccountConfig',
     'api.apps.ApiConfig',
+    'send_emails.apps.SendEmailsConfig',
 ]
 
 MIDDLEWARE = [
@@ -70,7 +71,7 @@ ROOT_URLCONF = 'expense_manager.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['.'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -91,8 +92,12 @@ WSGI_APPLICATION = 'expense_manager.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -167,8 +172,8 @@ SIMPLE_JWT = {
 
 AUTH_USER_MODEL = 'account.User'
 
-EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_TIMEOUT = 10
@@ -183,7 +188,7 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 CELERY_BEAT_SCHEDULE = {
     'send_emails': {
-        'task': 'api.tasks.send_statistics_to_users',
-        'schedule': crontab(minute=26),
+        'task': 'send_emails.tasks.send_statistics_to_users',
+        'schedule': crontab(minute=8),
     },
 }

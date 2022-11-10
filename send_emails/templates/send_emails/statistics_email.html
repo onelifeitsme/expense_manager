@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Статистика расходов</title>
+</head>
+<body>
+    <h2>
+        Статистика расходов за вчерашний день:
+    </h2>
+    <ul>
+        {% for i in user_yesterday_statistics %}
+            <li>
+                {{ i.category }}: {% if i.result %}{{ i.result }}{% else %}0{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

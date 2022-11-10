@@ -4,7 +4,6 @@ from django.db import models
 from transaction.models import TransactionCategory
 from django.db.models import Sum
 from django.utils import timezone
-import json
 
 
 class CustomUserManager(BaseUserManager):
@@ -42,20 +41,22 @@ class User(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    def get_user_statistics(self, days=1):
+    def get_user_statistics(self, days=1, special_day=None):
         """Статистика по категориям пользователя с выбираeмым количеством дней"""
         data = []
-        date_range = [timezone.now() - timezone.timedelta(days=int(days or 1) - 1), timezone.now()]
         user_categories = self.categories.all().prefetch_related('transactions')
+        if special_day:
+            date_range = [special_day, special_day]
+        else:
+            date_range = [timezone.now() - timezone.timedelta(days=int(days or 1) - 1), timezone.now()]
         for category in user_categories:
             category_transactions = category.transactions.filter(date__range=date_range)
             data.append(
                 {
                     'category': category.name,
-                    'expense': category_transactions.aggregate(sum=Sum('amount')).get('sum'),
+                    'result': category_transactions.aggregate(sum=Sum('amount')).get('sum'),
                 }
             )
-
         return data
 
     def save(self, *args, **kwargs):
