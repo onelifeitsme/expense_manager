@@ -1,9 +1,10 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.contrib.auth.models import PermissionsMixin, UserManager
+from django.contrib.auth.models import PermissionsMixin
 from django.db import models
-from transaction.models import TransactionCategory
 from django.db.models import Sum
 from django.utils import timezone
+
+from transaction.models import TransactionCategory
 
 
 class CustomUserManager(BaseUserManager):

@@ -1,13 +1,15 @@
 import pytest
+from rest_framework.reverse import reverse
+
 from account.models import User
 from transaction.models import Transaction
-from rest_framework.reverse import reverse
 
 
 @pytest.fixture
 def new_user(db) -> User:
     """Фикстура создания юзера"""
     return User.objects.create_user(email='testemail@gmail.com', password='testpassword')
+
 
 @pytest.fixture
 def jwt_token_access(new_user, client):
@@ -18,6 +20,7 @@ def jwt_token_access(new_user, client):
     }
     response = client.post(path=reverse('jwt-create'), data=data)
     return response.data.get('access')
+
 
 @pytest.fixture
 def few_transactions(new_user, db):

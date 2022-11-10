@@ -1,8 +1,14 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, ListAPIView
-from api.serializers import AccountSerializer, StatisticsCategorySerializer, TransactionSerializer, TransactionCategorySerializer
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import (ListAPIView, ListCreateAPIView,
+                                     RetrieveAPIView,
+                                     RetrieveUpdateDestroyAPIView)
 from rest_framework.permissions import IsAuthenticated
+
+from api.serializers import (AccountSerializer, StatisticsCategorySerializer,
+                             TransactionCategorySerializer,
+                             TransactionSerializer)
+
 from .filters import TransactionFilter
 
 
@@ -62,7 +68,3 @@ class TransactionView(ListCreateAPIView):
         user.balance += amount
         user.save(update_fields=['balance'])
         serializer.save(user=user)
-
-
-
-

@@ -1,11 +1,9 @@
 from django.db import models
-from django.db.models import Sum
-from django.utils import timezone
-import json
 
 
 class Transaction(models.Model):
-    user = models.ForeignKey('account.User', verbose_name='Пользователь', related_name='transactions', on_delete=models.CASCADE)
+    user = models.ForeignKey('account.User', verbose_name='Пользователь',
+                             related_name='transactions', on_delete=models.CASCADE)
     amount = models.DecimalField(verbose_name='Сумма', max_digits=10, decimal_places=2, default=0.0)
     date = models.DateField(verbose_name='Дата', auto_now_add=True)
     time = models.TimeField(verbose_name='Время', auto_now_add=True)
@@ -28,7 +26,8 @@ class TransactionCategory(models.Model):
                           'Покупки: одежда, техника', 'Продукты', 'Проезд',)
 
     name = models.CharField(verbose_name='Название', max_length=255)
-    user = models.ForeignKey('account.User', verbose_name='Пользователь', related_name='categories', on_delete=models.CASCADE)
+    user = models.ForeignKey('account.User', verbose_name='Пользователь',
+                             related_name='categories', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.user}:{self.name}'
