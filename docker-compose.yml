@@ -1,55 +1,39 @@
 version: '3.7'
 
 services:
-  db:
-    image: postgres:12.0-alpine
+  web:
+    build: .
     ports:
-      - "5433:5432"
+      - "8000:8000"
+    command: bash -c "python manage.py migrate && gunicorn expense_manager.wsgi:application -b 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=hello_django
-      - POSTGRES_PASSWORD=hello_django
-      - POSTGRES_DB=hello_django_dev
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
 
   redis:
-    image: 'redis:alpine'
-    hostname: redis
-    networks:
-      - live
-
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    stdin_open: true
-    volumes:
-      - .env:/app/.env
-    ports:
-      - 8000:8000
-    command: bash -c "python manage.py migrate && gunicorn expense_manager.wsgi:application -b 0.0.0.0:8000"
-    depends_on:
-      - db
-    networks:
-      - live
+    image: redis:alpine
 
   celery:
+    restart: always
     build:
       context: .
-      dockerfile: Dockerfile
-    command: "celery -A expense_manager worker --beat --scheduler django --loglevel=info"
-    depends_on:
-      - web
-      - redis
-      - db
-    restart: on-failure
-    networks:
-      - live
+    command: celery -A expense_manager worker --beat --scheduler django --loglevel=info
+    volumes:
+      - ./expense_manager:/expense_manager
     env_file:
-      - .env
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - web
 
 volumes:
   postgres_data:
-
-networks:
-  live:
