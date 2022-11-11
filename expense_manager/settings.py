@@ -6,10 +6,6 @@ from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv('.env')
-if '.env' in os.environ:
-    a = 1
-if '.envv' in os.environ:
-    a = 3
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -18,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-=x-q%#w_=*+s73kia$!^@&_b+6r8y(h&-586!dg5c%ieo86i7j')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
