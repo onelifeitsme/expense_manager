@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.documentation import include_docs_urls
+
+API_TITLE = 'API менеджера учёта расходов'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,4 +25,5 @@ urlpatterns = [
     path('api/v1/auth/', include('djoser.urls')),
     path('api/v1/auth/', include('djoser.urls.jwt')),
     path('api/v1/', include('api.urls')),
+    path('docs/', include_docs_urls(title=API_TITLE)),
 ]

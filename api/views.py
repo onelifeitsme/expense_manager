@@ -22,6 +22,7 @@ class AccountView(RetrieveAPIView):
 
 
 class AccountStatisticsView(ListAPIView):
+    """Получение статистики расходов пользователя по категориям"""
     permission_classes = [IsAuthenticated]
     serializer_class = StatisticsCategorySerializer
 

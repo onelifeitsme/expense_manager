@@ -6,6 +6,10 @@ from celery.schedules import crontab
 from dotenv import load_dotenv
 
 load_dotenv('.env')
+if '.env' in os.environ:
+    a = 1
+if '.envv' in os.environ:
+    a = 3
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -84,7 +88,7 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB_NAME', 'postgres'),
         'USER': os.environ.get('POSTGRES_USER', 'postgres'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
-        "HOST": "db",
+        "HOST": 'localhost' if os.environ.get('POSTGRES_DB_NAME') else 'db',
         "PORT": 5432,
     }
 }
@@ -140,6 +144,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'TIME_FORMAT': '%H:%M',
     'TIME_INPUT_FORMATS': '%H:%M',
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 DJOSER = {
