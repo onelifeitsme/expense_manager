@@ -1,0 +1,17 @@
+Запрос 1:
+
+SELECT notebooks_brand.title, COUNT(notebooks_notebook.brand_id)
+FROM notebooks_brand
+INNER JOIN notebooks_notebook on notebooks_notebook.brand_id = notebooks_brand.id
+GROUP BY notebooks_brand.title
+ORDER BY COUNT DESC;
+
+
+Запрос 2:
+
+WITH ceiling_values(diagonal)
+AS(select CEILING(diagonal) FROM notebooks_notebook)
+SELECT diagonal, COUNT(diagonal) FROM ceiling_values
+GROUP BY diagonal
+ORDER BY diagonal;
+
